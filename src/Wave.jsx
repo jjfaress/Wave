@@ -1,14 +1,13 @@
 import { Paper } from "@mui/material";
 import './Wave.scss'
 import { useEffect, useState } from "react";
-import EquationEditor from "equation-editor-react";
 import { parseTex } from "tex-math-parser";
 import linear from "linear-solve";
 
 
 export default function Wave() {
     
-    const [equation, setEquation] = useState(`y=sin(x)`);
+    const [equation, setEquation] = useState('y=50\\sin(x/5)');
 
     useEffect(()=>{
         try {
@@ -23,7 +22,7 @@ export default function Wave() {
         const raw = String.raw`${equation}`;
         const tree = parseTex(raw);
         let points = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             let code = tree.compile().evaluate({x: i});
             points[i] = code;
         }
@@ -46,7 +45,6 @@ export default function Wave() {
         id[n-1][n-2] = 2;
         return id
     }
-    
     const getCoef = (points) => {
         let n = points.length-1;
         let C = coefMatrix(n);
@@ -67,9 +65,9 @@ export default function Wave() {
     }
 
     const getControlPoints = (points) => {
-        let ce = getCoef(points);
-        let A = ce[0];
-        let B = ce[1];
+        let bc = getCoef(points);
+        let A = bc[0];
+        let B = bc[1];
         let coords = [];
         for (let i = 0; i < points.length; i++) {
             coords[i] = [points[i], A[i], B[i], points[i+1]]
@@ -79,32 +77,37 @@ export default function Wave() {
 
     const buildSvgPath = (coords) => {
         let d = ``;
-        for (let i = 0; i < 2; i++) {
-            let M = coords[i][0];
-            let c1 = coords[i][1];
-            let c2 = coords[i][2];
-            let c3 = coords[i][3];
-            d += `M ${i} ${M} C ${c1}, ${c2}, ${c3} `; 
+        for (let i = 0; i < coords.length; i++) {
+            let a = i+.25;
+            let b = i+.5;
+            let c = i+.75;
+            let M = `${i} ${coords[i][0]}`;
+            let c1 = `${a} ${coords[i][1]}`;
+            let c2 = `${b} ${coords[i][2]}`;
+            let c3 = `${c} ${coords[i][3]}`;
+            d += `M ${M} C ${c1}, ${c2}, ${c3} `;
         }
+        console.log(d)
         return d;
     }
+
+    const path = buildSvgPath(getControlPoints(getPoints()));
 
 
   return (
     <div className='container'>
         <Paper elevation={16} className="menu">
             <div className='editor'>
-                <EquationEditor 
-                value={equation}
-                onChange={setEquation}
-                autoCommands = 'pi theta'
-                autoOperatorNames="sin cos tan sec csc cot" 
-                className='editor'
-                />
+
             </div> 
         </Paper>
+        {equation}
         <div className="output">
-
+            <svg version="1.1" 
+            width='800' height='800' 
+            xmlns="http://www.w3.org/2000/svg">
+                <path d={path} stroke="black" />
+            </svg>
         </div>
     </div>
   )
