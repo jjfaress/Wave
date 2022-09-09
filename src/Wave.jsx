@@ -1,4 +1,4 @@
-import { Button, Paper, Slider } from "@mui/material";
+import { Button, Checkbox, Paper, Slider } from "@mui/material";
 import "./Wave.scss";
 import { useState } from "react";
 import { parseTex } from "tex-math-parser";
@@ -105,6 +105,31 @@ export default function Wave() {
             >
               advanced settings
             </Button>
+            <div id="basic">
+              <div className="row">
+                <div className="param">
+                  <span className="info">Amplitude</span>
+                  <Slider track={false} className="slider" />
+                </div>
+                <div className="param">
+                  <span className="info">Magnitude</span>
+                  <Slider track={false} className="slider" />
+                </div>
+              </div>
+              <div className="row">
+                <div className="param">
+                  <span className="info">Magnitude</span>
+                  <Slider track={false} className="slider" />
+                </div>
+                <div className="param">
+                  <span className="info">Magnitude</span>
+                  <Slider track={false} className="slider" />
+                </div>
+              </div>
+              <div className='checks'>
+                <Checkbox label="Seamless?"/>
+              </div>
+            </div>
           </div>
           <div className={state.advanced ? "active" : "inactive"}>
             <EditableMathField

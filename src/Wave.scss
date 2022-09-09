@@ -24,7 +24,7 @@
 
 .active,
 .inactive {
-  display: flex;
+  display: inline-flex;
   align-content: space-around;
   transition: all 200ms;
   flex-direction: column;
@@ -34,12 +34,45 @@
 .active {
   height: 100%;
   z-index: 2;
+  width: 90%;
 }
 
 .inactive {
   height: 0;
   opacity: 0;
   z-index: -1;
+  width: 90%;
+}
+
+#basic {
+  display: flex;
+  width: 60%;
+  flex-wrap: wrap;
+  overflow: visible;
+    
+
+  .row {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 8%;
+    margin-top: 5%;
+
+    .param {
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+
+      .info {
+        margin-right: 8%;
+      }
+
+      .slider {
+        width: 60%;
+      }
+    }
+  }
 }
 
 #editor {
