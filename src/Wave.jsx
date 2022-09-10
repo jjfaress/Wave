@@ -9,7 +9,7 @@ addStyles();
 
 export default function Wave() {
   const [state, setState] = useState({
-    equation: `300*\\sin(x)/200`,
+    equation: `3000*\\sin(0.1x)/200`,
     advanced: false,
   });
 
@@ -17,7 +17,7 @@ export default function Wave() {
     const raw = String.raw`${state.equation}`;
     const tree = parseTex(raw);
     let points = [];
-    for (let i = 0; i <= 44; i++) {
+    for (let i = 0; i <= 100; i++) {
       let code = tree.compile().evaluate({ x: i });
       points[i] = code;
     }
@@ -70,6 +70,7 @@ export default function Wave() {
     for (let i = 0; i < points.length - 1; i++) {
       coords[i] = [points[i], A[i], B[i], points[i + 1]];
     }
+    // console.log(coords)
     return coords;
   };
 
@@ -83,7 +84,7 @@ export default function Wave() {
       let c1 = `${a} ${coords[i][1]}`;
       let c2 = `${b} ${coords[i][2]}`;
       let c3 = `${c} ${coords[i][3]}`;
-      d += `M ${M} C ${c1}, ${c2}, ${c3} `;
+      d += `M ${M} C ${c1}, ${c2}, ${c3}`;
     }
     return d;
   };
@@ -94,41 +95,41 @@ export default function Wave() {
     <div className="container">
       <Paper elevation={16} className="paper">
         <div className="input">
-          <div className={state.advanced ? "inactive" : "active"}>
-            <Button
-              onClick={() => {
-                setState({
-                  ...state,
-                  advanced: !state.advanced,
-                });
-              }}
-            >
-              advanced settings
-            </Button>
-            <div id="basic">
-              <div className="row">
-                <div className="param">
-                  <span className="info">Amplitude</span>
-                  <Slider track={false} className="slider" />
-                </div>
-                <div className="param">
-                  <span className="info">Magnitude</span>
-                  <Slider track={false} className="slider" />
-                </div>
+          <Button
+            onClick={() => {
+              setState({
+                ...state,
+                advanced: !state.advanced,
+              });
+            }}
+          >
+            advanced settings
+          </Button>
+          <div id="basic">
+            <div className="col">
+              <div className="param">
+                <span className="info">Amplitude</span>
+                <Slider track={false} className="slider" />
               </div>
-              <div className="row">
-                <div className="param">
-                  <span className="info">Magnitude</span>
-                  <Slider track={false} className="slider" />
-                </div>
-                <div className="param">
-                  <span className="info">Magnitude</span>
-                  <Slider track={false} className="slider" />
-                </div>
+              <div className="param">
+                <span className="info">Magnitude</span>
+                <Slider track={false} className="slider" />
               </div>
-              <div className='checks'>
-                <Checkbox label="Seamless?"/>
+            </div>
+            <div className="col">
+              <div className="param">
+                <span className="info">Magnitude</span>
+                <Slider track={false} className="slider" />
               </div>
+              <div className="param">
+                <span className="info">Magnitude</span>
+                <Slider track={false} className="slider" />
+              </div>
+            </div>
+
+            <div className="checkBoxes">
+              <Checkbox />
+              <Checkbox />
             </div>
           </div>
           <div className={state.advanced ? "active" : "inactive"}>
@@ -154,21 +155,21 @@ export default function Wave() {
             </Button>
           </div>
         </div>
-        <div className="output">
-          <svg
-            version="1.1"
-            transform="scale(1.2)"
-            width="700"
-            height="300"
-            viewBox="0 -150 600 300"
-            className="svg"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d={path} id="path" stroke="black" />
-          </svg>
-        </div>
       </Paper>
+      <div className="output">
+        <svg
+          version="1.1"
+          transform="scale(1.2)"
+          width="700"
+          height="300"
+          viewBox="0 -150 150 300"
+          className="svg"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d={path} id="path" stroke="black" />
+        </svg>
+      </div>
     </div>
   );
 }
