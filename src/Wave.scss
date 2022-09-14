@@ -11,7 +11,7 @@
   flex-direction: column;
   width: 65vw;
   height: 30vh;
-  margin-top: 10%;
+  margin: auto;
 }
 
 .input {
@@ -38,7 +38,6 @@
   height: 100%;
 
   #editor {
-    height: 5%;
     position: relative;
     top: 35px;
   }
@@ -47,15 +46,10 @@
 .inactive {
   height: 0;
   z-index: -1;
-  padding-top: 30px;
 
   #editor {
     position: relative;
     top: 35px;
-  }
-
-  Button {
-    position: relative;
   }
 }
 
@@ -65,8 +59,10 @@
   height: 100%;
   flex-wrap: wrap;
   justify-content: center;
+  // align-items: center;
   overflow: visible;
   flex-direction: row;
+  // flex-direction: column;
   z-index: 0;
 
   .col {
@@ -91,6 +87,7 @@
 #editor {
   margin: auto;
   width: fit-content;
+  
 }
 
 .output {

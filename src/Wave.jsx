@@ -4,22 +4,21 @@ import { useState } from "react";
 import { parseTex } from "tex-math-parser";
 import linear from "linear-solve";
 import { addStyles, EditableMathField } from "react-mathquill";
-
 addStyles();
 
 export default function Wave() {
   const [state, setState] = useState({
-    equation: `3000*\\sin(0.1x)/200`,
     advanced: false,
+    path: ``,
   });
 
-  const getPoints = () => {
-    const raw = String.raw`${state.equation}`;
+  const getPoints = (equation) => {
+    const raw = String.raw`${equation}`;
     const tree = parseTex(raw);
     let points = [];
     for (let i = 0; i <= 100; i++) {
-      let code = tree.compile().evaluate({ x: i });
-      points[i] = code;
+        let code = tree.compile().evaluate({ x: i });
+        points[i] = code;
     }
     return points;
   };
@@ -70,7 +69,6 @@ export default function Wave() {
     for (let i = 0; i < points.length - 1; i++) {
       coords[i] = [points[i], A[i], B[i], points[i + 1]];
     }
-    // console.log(coords)
     return coords;
   };
 
@@ -84,12 +82,26 @@ export default function Wave() {
       let c1 = `${a} ${coords[i][1]}`;
       let c2 = `${b} ${coords[i][2]}`;
       let c3 = `${c} ${coords[i][3]}`;
+
       d += `M ${M} C ${c1}, ${c2}, ${c3}`;
     }
-    return d;
+    setState({
+      ...state,
+      path: d,
+    });
   };
 
-  const path = buildSvgPath(getControlPoints(getPoints()));
+  const handleEquation = (equation) => {
+    try {
+      let points = getPoints(equation);
+      return buildSvgPath(getControlPoints(points))
+    } catch (e) {
+      return setState({
+        ...state,
+        path: ``
+      })
+    }
+  };
 
   return (
     <div className="container">
@@ -129,18 +141,18 @@ export default function Wave() {
 
             <div className="checkBoxes">
               <Checkbox />
-              <Checkbox />
             </div>
           </div>
           <div className={state.advanced ? "active" : "inactive"}>
             <EditableMathField
               id="editor"
-              latex={state.equation}
+              latex='\sin(x)'
+              config={{
+                autoOperatorNames: "sin cos tan",
+                autoCommands: "sqrt sum pi",
+              }}
               onChange={(field) => {
-                setState({
-                  ...state,
-                  equation: field.latex(),
-                });
+                handleEquation(field.latex());
               }}
             />
             <Button
@@ -167,7 +179,7 @@ export default function Wave() {
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d={path} id="path" stroke="black" />
+          <path d={state.path} id="path" stroke="black" />
         </svg>
       </div>
     </div>
